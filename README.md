@@ -47,12 +47,33 @@ to test hypotheses about the differences in conversion rates across different gr
 
 # Project Steps
 ## 1. Data Preparation
-**- Load the dataset.
-- Ensure the uniqueness of the user ID column by checking for duplicates.
-- Drop unwanted columns.**
+**- Load the dataset.**
+**- Ensure the uniqueness of the user ID column by checking for duplicates.**
+**- Drop unwanted columns.**
+**- Check for missing values**
 ```
+# Read in data
+df = pd.read_csv("marketing_AB.csv")
+print(df)
+
+# Ensure the ID column is unique, having no duplicates
 df.duplicated(subset = 'user id').sum()
+
+# Dropping unwanted columns
 df.drop(['Unnamed: 0', 'user id'], axis = 1, inplace = True)
+print(df.columns)
+
+# Check how many catagories are in each column
+df_cat = df[['test group', 'converted', 'most ads day', 'most ads hour']]
+print(df_cat.nunique())
+
+# Check the names of these levels make sense
+for i in df_cat.columns:
+    print(i.upper(), ":", df_cat[i].unique())
+
+# Check for missing values
+missing_values = df.isnull().sum()
+print("Missing Values:\n", missing_values)
 ```
 ## 2. Exploratory Data Analysis (EDA)
 ### Univariate Analysis:
