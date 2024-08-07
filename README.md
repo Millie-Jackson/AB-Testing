@@ -119,17 +119,76 @@ converted        False     True
 ![image](https://github.com/user-attachments/assets/f1847971-be28-454f-b95d-1c3c71644227)
 - Median amount of ads screen by converters is 25 vs 10 by those not converted
 
+## 3. Statistical Tests
+- Perform Chi-squared tests to evaluate the significance of differences in conversion rates across different groups.
+```
+Chi-squared test for test group vs.converted:
+Chi-squared value: 54.005823883685245
+p-value: 1.9989623063390075e-13
+The difference in conversion rates across test group is statistically significant.
+
+Chi-squared test for most ads day vs.converted:
+Chi-squared value: 410.0478857936585
+p-value: 1.932184379244731e-85
+The difference in conversion rates across most ads day is statistically significant.
+
+Chi-squared test for most ads hour vs.converted:
+Chi-squared value: 430.76869230822086
+p-value: 8.027629823696771e-77
+```
+**test group vs converted** = Showing the ad makes a difference
+
+**most ads day vs converted** = the day of the week the ad is shown makes a difference
+
+**most ads hour vs converted** = the hour of the day the ad is shown makes a difference
+
+
+- Conduct hypothesis testing. Check for normality using the Shapiro-Wilk test.
+```
+# Step 1: Check Assumption
+# Normality assumption
+shapiro_stat_true, shapiro_p_value_true = shapiro(df[df['converted'] == True]['total ads'])
+shapiro_stat_false, shapiro_p_value_false = shapiro(df[df['converted'] == False]['total ads'])
+
+print(f"Shapiro-Wilk test for normality (True group): p-value = {shapiro_p_value_true}")
+print(f"Shapiro-Wilk test for normality (False group): p-value = {shapiro_p_value_false}")
+```
+
+- Check for equality of variances using Levene's test.
+```
+# Equality of varience assumptions
+levene_stat, levene_p_value = levene(df[df['converted']]['total ads'], df[~df['converted']]['total ads'])
+print(f"Levene's test for equality of variances: p-value = {levene_p_value}")
+```
+- Depending on the test results, perform either a t-test for means or a Mann-Whitney U test for medians.
+```
+# Step 2: Perform a suitable test
+alpha = 0.05
+
+if shapiro_p_value_true > alpha and shapiro_p_value_false> alpha and levene_p_value > alpha:
+    # Assumptions met - use t-test for means
+    t_stat, t_p_value = ttest_ind(df[df['converted']]['total ads'], df[~df['converted']]['total ads'])
+    print(f"Independent two-sample t_test: p-value = {t_p_value}")
+else:
+    # Assumptions not met - use Mann-Whitney U test for medians
+    u_stat, u_p_value, = mannwhitneyu(df[df['converted']]['total ads'], df[~df['converted']]['total ads'])
+    print(f"Mann-Whitney U test: p-value = {u_p_value}")
+```
+
+```
+The difference in conversion rates across most ads hour is statistically significant.
+Shapiro-Wilk test for normality (True group): p-value = 0.0
+Shapiro-Wilk test for normality (False group): p-value = 0.0
+Levene's test for equality of variances: p-value = 0.0
+Mann-Whitney U test: p-value = 0.0
+```
+Conversion status is related to, how many median ads they have seen, so it does make a difference
 
 
 
 # IN PROGRESS
 
-## 3. Statistical Tests
-- Perform Chi-squared tests to evaluate the significance of differences in conversion rates across different groups.
-- Conduct hypothesis testing:
-- Check for normality using the Shapiro-Wilk test.
-- Check for equality of variances using Levene's test.
-- Depending on the test results, perform either a t-test for means or a Mann-Whitney U test for medians.
+
 
 Results
 The analysis provides insights into:
