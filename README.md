@@ -184,7 +184,15 @@ Mann-Whitney U test: p-value = 0.0
 ```
 Conversion status is related to, how many median ads they have seen, so it does make a difference
 
+### Machine Learning
+In the classification report it has been noted that the support for each class is unbalanced.
+```
+          support
 
+False     171970
+True      4461
+```
+Building machine learning models on unbalanced data is a common and often necessary practice in many real-world applications, such as fraud detection, medical diagnosis, and rare event prediction. While it poses challenges, there are strategies and techniques to effectively handle unbalanced data and create robust models.
 
 # IN PROGRESS
 
