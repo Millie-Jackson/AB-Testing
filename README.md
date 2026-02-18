@@ -72,11 +72,7 @@ converted        False     True
 ```
 27 is the 75% percentile lets take the top 50% because most of it is outliers
 
-### Bivariate Analysis:
-**- Use crosstabulation and bar plots to compare conversion rates between different groups (e.g., test group, most ads day, most ads hour).**
-![image](https://github.com/user-attachments/assets/91c1098e-7939-40e7-8e87-fd75edf49199)
-- Out of all the people that saw the ad, 2.5% made a purchase
-- Out of all the people that saw the general announcement, only 1.7% made a purchase
+
 ![image](https://github.com/user-attachments/assets/f49cefba-7f34-4abb-b3ef-4982c3bfcc32)
 - most ads day = Friday is when most conversions happen
 **- Use box plots to compare the total number of ads seen by converted and non-converted users.**
