@@ -59,20 +59,6 @@ Python · Pandas · SciPy · Matplotlib · Seaborn
 Statistical testing · A/B testing methodology · Data visualisation
 
 
-## 2. Exploratory Data Analysis (EDA)
-### Univariate Analysis:
-**- Visualize the distribution of categorical variables using count plots and pie charts.**
-![image](https://github.com/user-attachments/assets/bdc6ec81-eb0e-45d0-9571-3ae0a319103b)
-- The count plot is difficult to read
-- 4% of people were shown the public service announcement
-![image](https://github.com/user-attachments/assets/e6574480-e258-4235-ad1b-96214c2b3e8c)
-- Only 2.52% of the public service announcement converted
-![image](https://github.com/user-attachments/assets/47484e73-6d70-4c08-bd99-c18918717f64)
-- The pie chart is not confusing, too many categories
-- Count plot shows Friday is most popular followed by Monday
-![image](https://github.com/user-attachments/assets/ae8bfa86-019c-46b4-9739-73f352196913)
-- Again the pie chart is useless now, too many categories
-- Early hours of the day (after midnight) are the least effective
   
 **- Analyze the distribution of continuous variables using histograms and box plots.**
 ![image](https://github.com/user-attachments/assets/5d5a7331-71ab-49d9-8dbe-604fb5714e64)
