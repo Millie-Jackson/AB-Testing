@@ -1,80 +1,64 @@
-# Overview
-This project focuses on analyzing a marketing A/B testing dataset to evaluate the effectiveness of advertising campaigns. Marketing companies often use A/B testing to compare different strategies and determine which one has the most significant impact on their business metrics. This project aims to answer key questions regarding the success of marketing campaigns and the specific impact of ads on conversion rates.
+# A/B Testing Analysis – Marketing Campaign Evaluation
 
-# Objectives
-The main objectives of this project are to:
+## Executive Summary
+- The advertisement group achieved a higher conversion rate than the control group (PSA).
+- The uplift in conversion was statistically significant.
+- Conversion likelihood increased with higher ad exposure.
+- Time of day and day of week influenced performance.
+- Findings support continued ad spend with optimisation of timing and exposure frequency.
 
-Determine if the marketing campaign was successful.
-Assess how much of the campaign's success can be attributed to the ads.
-By conducting an A/B test, we can compare the conversion rates between an experimental group exposed to ads and a control group that sees a Public Service Announcement (PSA) or no ad at all. The goal is to analyze these groups to find out if the ads were successful, estimate the potential revenue from the ads, and evaluate the statistical significance of the differences between the groups.
+## Overview
+A marketing team requested an independent analysis of their A/B testing campaign to determine whether paid advertisements were driving meaningful increases in conversion rates compared to a control (PSA/no ad).
 
-# Dataset
-The dataset is designed to analyze the groups, determine if the ads were successful, estimate the revenue generated from the ads, 
-and assess if the difference between the groups is statistically significant.
+The objective was to validate performance, quantify uplift, and assess whether observed differences were statistically significant before scaling ad spend.
 
-## Data Dictionary
-**Index:** Row index
+## Business Questions
+1. Did the advertisement increase conversions?
+2. Was the uplift statistically significant?
+3. Are timing and frequency factors influencing performance?
+4. Can we estimate the potential impact on revenue?
 
-**user id:** Unique identifier for each user
+## Approach
 
-**test group:** Indicates whether the user saw the advertisement ("ad") or the public service announcement ("psa")
+### Data Preparation
+- Verified user ID uniqueness
+- Removed irrelevant fields
+- Checked for missing values and anomalies
+- Prepared data for statistical comparison
 
-**converted:** Indicates whether the user bought the product (True) or not (False)
+### Exploratory Analysis
+- Compared conversion rates between control and ad groups
+- Examined performance by day and hour
+- Analysed distribution of total ads viewed
+- Identified outliers and class imbalance
 
-**total ads:** The total number of ads seen by the user
+### Statistical Testing
+- Chi-squared tests for categorical relationships
+- Normality and variance testing (Shapiro-Wilk, Levene)
+- Mann-Whitney U test where assumptions failed
+- Validation of conversion uplift significance
 
-**most ads day:** The day on which the user saw the highest number of ads
+## Key Findings
+- The advertisement group showed a higher conversion rate than the control group.
+- The difference was statistically significant.
+- Day and hour of exposure influenced conversion performance.
+- Users who converted were exposed to more ads on average.
+- Data exhibited class imbalance, which was accounted for in modelling considerations.
 
-**most ads hour:** The hour of the day during which the user saw the highest number of ads.
+## Outcome
+The analysis confirmed that ad exposure contributed to increased conversions and that the uplift was statistically reliable.
+Clear recommendations were provided to:
 
-## Usage
-This dataset allows for comprehensive analysis of the effectiveness of marketing campaigns through A/B testing, 
-helping companies to make data-driven decisions and optimize their marketing strategies.
+- Optimise ad timing
+- Evaluate exposure thresholds
+- Improve campaign efficiency
+- Support budget allocation decisions
 
-# Skills Demonstrated
+## Tools Used
+Python · Pandas · SciPy · Matplotlib · Seaborn
+Statistical testing · A/B testing methodology · Data visualisation
 
-**A/B Testing:** The project involves comparing the conversion rates between different groups (test groups) to assess the impact of different variables, 
-which is a core part of A/B testing.
 
-**Data Visualization:** The project extensively uses data visualization techniques such as count plots, pie charts, histograms, 
-and box plots to visualize the distribution of different variables and their relationships.
-
-**Exploratory Data Analysis (EDA):** The project performs univariate and bivariate analysis, including descriptive statistics and visualization to understand t
-he data distribution and relationships between variables.
-
-**Hypothesis Testing:** The project uses statistical tests (Chi-squared test, Shapiro-Wilk test, Levene's test, t-test, and Mann-Whitney U test) 
-to test hypotheses about the differences in conversion rates across different groups and variables.
-
-# Project Steps
-## 1. Data Preparation
-**- Load the dataset.**
-**- Ensure the uniqueness of the user ID column by checking for duplicates.**
-**- Drop unwanted columns.**
-**- Check for missing values**
-```
-# Read in data
-df = pd.read_csv("marketing_AB.csv")
-print(df)
-
-# Ensure the ID column is unique, having no duplicates
-df.duplicated(subset = 'user id').sum()
-
-# Dropping unwanted columns
-df.drop(['Unnamed: 0', 'user id'], axis = 1, inplace = True)
-print(df.columns)
-
-# Check how many catagories are in each column
-df_cat = df[['test group', 'converted', 'most ads day', 'most ads hour']]
-print(df_cat.nunique())
-
-# Check the names of these levels make sense
-for i in df_cat.columns:
-    print(i.upper(), ":", df_cat[i].unique())
-
-# Check for missing values
-missing_values = df.isnull().sum()
-print("Missing Values:\n", missing_values)
-```
 ## 2. Exploratory Data Analysis (EDA)
 ### Univariate Analysis:
 **- Visualize the distribution of categorical variables using count plots and pie charts.**
@@ -194,37 +178,4 @@ True      4461
 ```
 Building machine learning models on unbalanced data is a common and often necessary practice in many real-world applications, such as fraud detection, medical diagnosis, and rare event prediction. While it poses challenges, there are strategies and techniques to effectively handle unbalanced data and create robust models.
 
-# IN PROGRESS
 
-
-
-Results
-The analysis provides insights into:
-
-The success rate of the marketing campaign.
-The impact of ads on conversion rates.
-Statistical significance of the differences observed between the experimental and control groups.
-Conclusion
-This project demonstrates how A/B testing and statistical analysis can be applied to evaluate the effectiveness of marketing campaigns. By analyzing the dataset, we can make data-driven decisions to optimize marketing strategies and improve business outcomes.
-
-Getting Started
-Prerequisites
-Python 3.x
-Required Python libraries: numpy, pandas, matplotlib, seaborn, scipy
-Installation
-Install the required libraries using pip:
-
-bash
-Copy code
-pip install numpy pandas matplotlib seaborn scipy
-Running the Project
-Clone the repository.
-Navigate to the project directory.
-Run the Jupyter notebook or Python script containing the project code.
-bash
-Copy code
-jupyter notebook Marketing_AB_Testing.ipynb
-# or
-python marketing_ab_testing.py
-Contact
-For any questions or feedback, please contact [Your Name] at [Your Email].
