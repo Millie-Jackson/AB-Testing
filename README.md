@@ -59,10 +59,7 @@ Python · Pandas · SciPy · Matplotlib · Seaborn
 Statistical testing · A/B testing methodology · Data visualisation
 
 
-  
-**- Analyze the distribution of continuous variables using histograms and box plots.**
-![image](https://github.com/user-attachments/assets/5d5a7331-71ab-49d9-8dbe-604fb5714e64)
-- The median on the box plot is 10 ads
+
 
 **- Calculate descriptive statistics.**
 ```  
