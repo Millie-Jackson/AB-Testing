@@ -82,9 +82,6 @@ converted        False     True
 - Out of all the people that saw the general announcement, only 1.7% made a purchase
 ![image](https://github.com/user-attachments/assets/f49cefba-7f34-4abb-b3ef-4982c3bfcc32)
 - most ads day = Friday is when most conversions happen
-![image](https://github.com/user-attachments/assets/3294c42c-2464-4992-bc0f-04c6e5ccf76a)
-- most ads hour = Most conversions at 1600 then 2000 then 1500. Least conversions at 0200, 0300, 0100. This makes sense.
-- This shows us when people are most likely to buy
 **- Use box plots to compare the total number of ads seen by converted and non-converted users.**
 ![image](https://github.com/user-attachments/assets/f1847971-be28-454f-b95d-1c3c71644227)
 - Median amount of ads screen by converters is 25 vs 10 by those not converted
