@@ -45,6 +45,17 @@ The objective was to validate performance, quantify uplift, and assess whether o
 - Users who converted were exposed to more ads on average.
 - Data exhibited class imbalance, which was accounted for in modelling considerations.
 
+## Key Visual Findings
+
+### Conversion Rate: Ad vs Control
+![Conversion Rate](figures/conversion_rate_ad_vs_control.png)
+
+### Ad Exposure by Conversion Status
+![Ad Exposure](figures/ad_exposure_vs_conversion.png)
+
+### Top Performing Hours
+![Top Hours](figures/top_hours_conversion.png)
+
 ## Outcome
 The analysis confirmed that ad exposure contributed to increased conversions and that the uplift was statistically reliable.
 Clear recommendations were provided to:

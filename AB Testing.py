@@ -30,21 +30,166 @@ for i in df_cat.columns:
 
 
 
+# =========================
+# CLIENT-FACING CHARTS
+# =========================
+
+# Helper: trim extreme outliers for clearer plots (client-friendly)
+ads_cap = df["total ads"].quantile(0.95)
+df_plot = df[df["total ads"] <= ads_cap].copy()
+
+# 1) Conversion rate: Ad vs PSA (the headline chart)
+conv_rate = df.groupby("test group")["converted"].mean().sort_index() * 100  # %
+plt.figure(figsize=(6, 4))
+bars = plt.bar(conv_rate.index, conv_rate.values)
+plt.ylabel("Conversion rate (%)")
+plt.title("Conversion Rate: Ad vs Control (PSA)")
+plt.ylim(0, max(conv_rate.values) * 1.6)
+
+for b in bars:
+    y = b.get_height()
+    plt.text(b.get_x() + b.get_width()/2, y, f"{y:.2f}%", ha="center", va="bottom")
+
+plt.tight_layout()
+plt.show()
+
+# Optional: print uplift in plain English
+ad = conv_rate.get("ad", np.nan)
+psa = conv_rate.get("psa", np.nan)
+if pd.notna(ad) and pd.notna(psa):
+    print(f"Ad conversion:  {ad:.2f}%")
+    print(f"PSA conversion: {psa:.2f}%")
+    print(f"Absolute uplift: {ad - psa:.2f} percentage points")
+
+# 2) Exposure vs conversion (boxplot)
+data_false = df_plot[df_plot["converted"] == False]["total ads"]
+data_true  = df_plot[df_plot["converted"] == True]["total ads"]
+
+plt.figure(figsize=(6, 4))
+plt.boxplot([data_false, data_true], labels=["Not converted", "Converted"], showfliers=False)
+plt.ylabel("Total ads seen (trimmed)")
+plt.title("Ad Exposure by Conversion Status")
+plt.tight_layout()
+plt.show()
+
+# 3) OPTIONAL: Conversion rate by hour (only if you want 1 timing chart)
+# Keeps it readable by sorting by conversion rate and showing top 10 hours
+conv_by_hour = (df.groupby("most ads hour")["converted"].mean() * 100).sort_values(ascending=False).head(10)
+
+plt.figure(figsize=(8, 4))
+bars = plt.bar(conv_by_hour.index.astype(str), conv_by_hour.values)
+plt.ylabel("Conversion rate (%)")
+plt.title("Top 10 Hours by Conversion Rate")
+plt.xticks(rotation=45)
+
+for b in bars:
+    y = b.get_height()
+    plt.text(b.get_x() + b.get_width()/2, y, f"{y:.2f}%", ha="center", va="bottom")
+
+plt.tight_layout()
+plt.show()
+
+import os
+
+# =========================
+# CLIENT-FACING CHARTS
+# =========================
+
+# Create figures folder if it doesn't exist
+os.makedirs("figures", exist_ok=True)
+
+# Trim extreme outliers (cleaner presentation)
+ads_cap = df["total ads"].quantile(0.95)
+df_plot = df[df["total ads"] <= ads_cap].copy()
+
+# -------------------------
+# 1️⃣ Conversion Rate: Ad vs PSA
+# -------------------------
+
+conv_rate = df.groupby("test group")["converted"].mean() * 100
+
+plt.figure(figsize=(6, 4))
+bars = plt.bar(conv_rate.index, conv_rate.values)
+plt.ylabel("Conversion Rate (%)")
+plt.title("Conversion Rate: Ad vs Control")
+plt.ylim(0, max(conv_rate.values) * 1.6)
+
+for b in bars:
+    y = b.get_height()
+    plt.text(
+        b.get_x() + b.get_width()/2,
+        y,
+        f"{y:.2f}%",
+        ha="center",
+        va="bottom"
+    )
+
+plt.tight_layout()
+plt.savefig("figures/conversion_rate_ad_vs_control.png", dpi=300)
+plt.close()
+
+
+# -------------------------
+# 2️⃣ Ad Exposure vs Conversion
+# -------------------------
+
+data_false = df_plot[df_plot["converted"] == False]["total ads"]
+data_true  = df_plot[df_plot["converted"] == True]["total ads"]
+
+plt.figure(figsize=(6, 4))
+plt.boxplot(
+    [data_false, data_true],
+    labels=["Not Converted", "Converted"],
+    showfliers=False
+)
+plt.ylabel("Total Ads Seen (Trimmed)")
+plt.title("Ad Exposure by Conversion Status")
+
+plt.tight_layout()
+plt.savefig("figures/ad_exposure_vs_conversion.png", dpi=300)
+plt.close()
+
+
+# -------------------------
+# 3️⃣ OPTIONAL: Top 10 Hours by Conversion
+# -------------------------
+
+conv_by_hour = (
+    df.groupby("most ads hour")["converted"]
+    .mean()
+    .sort_values(ascending=False)
+    .head(10) * 100
+)
+
+plt.figure(figsize=(8, 4))
+bars = plt.bar(conv_by_hour.index.astype(str), conv_by_hour.values)
+plt.ylabel("Conversion Rate (%)")
+plt.title("Top 10 Hours by Conversion Rate")
+plt.xticks(rotation=45)
+
+for b in bars:
+    y = b.get_height()
+    plt.text(
+        b.get_x() + b.get_width()/2,
+        y,
+        f"{y:.2f}%",
+        ha="center",
+        va="bottom"
+    )
+
+plt.tight_layout()
+plt.savefig("figures/top_hours_conversion.png", dpi=300)
+plt.close()
+
+print("Charts saved to /figures folder.")
+
+
+
 # UNIVARIATE ANALYSIS #
 variable = 'test group' 
 
 plt.figure(figsize = (6, 4))
 
-# Count plot
-plt.subplot(1, 2, 1) # Divide the figure so we can show both plots (1 row, 2 columns)
-sns.countplot(x=variable, data=df_cat)
-plt.title(f'Count Plot - {variable}')
-
-# Pie Chart
-plt.subplot(1, 2, 2) # Put it in the 2nd column
-counts = df_cat[variable].value_counts()
-plt.pie(counts, labels=counts.index, autopct='%0.2f%%')
-plt.title(f'Pie Chart - {variable}')
 
 # Adust layout
 plt.tight_layout() #  Display the plots nicely
@@ -57,16 +202,6 @@ variable = 'converted'
 
 plt.figure(figsize = (6, 4))
 
-# Count plot
-plt.subplot(1, 2, 1) # Divide the figure so we can show both plots (1 row, 2 columns)
-sns.countplot(x=variable, data=df_cat)
-plt.title(f'Count Plot - {variable}')
-
-# Pie Chart
-plt.subplot(1, 2, 2) # Put it in the 2nd column
-counts = df_cat[variable].value_counts()
-plt.pie(counts, labels=counts.index, autopct='%0.2f%%')
-plt.title(f'Pie Chart - {variable}')
 
 # Adust layout
 plt.tight_layout() #  Display the plots nicely
@@ -79,17 +214,6 @@ variable = 'most ads day'
 
 plt.figure(figsize = (6, 4))
 
-# Count plot
-plt.subplot(1, 2, 1) # Divide the figure so we can show both plots (1 row, 2 columns)
-sns.countplot(x=variable, data=df_cat, order = df_cat['most ads day'].value_counts().index) # Order by decreasing value
-plt.title(f'Count Plot - {variable}')
-plt.xticks(rotation = 90) # Rotate so the words dont overlap the plot
-
-# Pie Chart
-plt.subplot(1, 2, 2) # Put it in the 2nd column
-counts = df_cat[variable].value_counts()
-plt.pie(counts, labels=counts.index, autopct='%0.2f%%')
-plt.title(f'Pie Chart - {variable}')
 
 # Adust layout
 plt.tight_layout() #  Display the plots nicely
@@ -102,17 +226,6 @@ variable = 'most ads hour'
 
 plt.figure(figsize = (6, 4))
 
-# Count plot
-plt.subplot(1, 2, 1) # Divide the figure so we can show both plots (1 row, 2 columns)
-sns.countplot(x=variable, data=df_cat, order = df_cat['most ads hour'].value_counts().index) # Order by decreasing value
-plt.title(f'Count Plot - {variable}')
-plt.xticks(rotation = 90) # Rotate so the words dont overlap the plot
-
-# Pie Chart
-plt.subplot(1, 2, 2) # Put it in the 2nd column
-counts = df_cat[variable].value_counts()
-plt.pie(counts, labels=counts.index, autopct='%0.2f%%')
-plt.title(f'Pie Chart - {variable}')
 
 # Adust layout
 plt.tight_layout() #  Display the plots nicely
@@ -125,11 +238,6 @@ variable = 'total ads'
 
 plt.figure(figsize = (6, 4))
 
-# Histogram
-plt.subplot(1, 2, 1) # Divide the figure so we can show both plots (1 row, 2 columns)
-sns.histplot(x=variable, data = df[df['total ads'] < 50]) # Choosing the top 50% to reduce the outliers
-plt.title(f'Histogram - {variable}')
-plt.xticks(rotation = 90) # Rotate so the words dont overlap the plot
 
 # Box Plot
 plt.subplot(1, 2, 2) # Put it in the 2nd column
@@ -146,21 +254,6 @@ df['total ads'].describe()
 
 
 # BIVARIATE ANALYSIS #
-
-# Compare 'test group' to 'converted'
-ct_conversion_test_group = pd.crosstab(df['test group'], df['converted'], normalize = 'index') # normalise (divide by rows)
-print(ct_conversion_test_group)
-ct_conversion_test_group.plot.bar(stacked = True);
-
-# Compare 'most ads day' to 'converted'
-ct_conversion_day = pd.crosstab(df['most ads day'], df['converted'], normalize = 'index') # normalise (divide by rows)
-print(ct_conversion_day.sort_values(by = True, ascending = False))
-ct_conversion_day.plot.bar(stacked = True);
-
-# Compare 'most ads hour' to 'converted'
-ct_conversion_hour = pd.crosstab(df['most ads hour'], df['converted'], normalize = 'index') # normalise (divide by rows)
-print(ct_conversion_hour.sort_values(by = True, ascending = False))
-ct_conversion_hour.plot.bar(stacked = True);
 
 # Compare 'converted' to ;total ads'
 sns.boxplot(x = 'converted', y = 'total ads', data = df[df['total ads'] < 50]); # Choosing the top 50% to reduce the outliers
